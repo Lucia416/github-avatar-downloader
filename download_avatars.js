@@ -16,7 +16,7 @@ function getRepoContributors(repoOwner, repoName, cb) {
 
 
 getRepoContributors(process.argv[2], process.argv[3], function(err, result, body) {
-if(process.argv[2] !== null && process.argv[3] !== null ){
+if(process.argv[2] != null && process.argv[3] != null ){
      var parse = JSON.parse(body);
      //il parse lo si fa qui perche' questa funzione e' quella che viene chiamata nella callback
      parse.forEach(function(name){
