@@ -6,25 +6,26 @@ console.log('Welcome to the GitHub Avatar Downloader');
 
 
 function getRepoContributors(repoOwner, repoName, cb) {
-  var requestURL = 'https://'+ GITHUB_USER + ':' + GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors';
+ var requestURL = 'https://'+ GITHUB_USER + ':' + GITHUB_TOKEN + '@api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors';
 
-  var option = {url : requestURL, headers: {'User-Agent': "GitHub Avatar Downloader - Student Project" } };
-  //
-  request(option, cb);
+ var option = {url : requestURL, headers: {'User-Agent': "GitHub Avatar Downloader - Student Project" } };
+ //creare option per avere dei parametri
+ request(option, cb);
+ // non c'e' bisogno di scrivere tutta la funzione perche' cb si riferisce al body di sotto
 }
 
 
-getRepoContributors("jquery", "jquery", function(err, result, body) {
-  var parse = JSON.parse(body);
-  parse.forEach(function(name){
-    downloadImageByURL(name.avatar_url, name.login);
-  })
-  function downloadImageByURL(url, filePath) {
-    request.get(url)
-    .pipe(fs.createWriteStream(`./Avatar/${filePath}.jpg`));
-    // ...
-  }
-/*
-  console.log("Errors:", err);
-  console.log("Result:", body); */
+getRepoContributors(process.argv[2], process.argv[3], function(err, result, body) {
+ var parse = JSON.parse(body);
+ //il parse lo si fa qui perche' questa funzione e' quella che viene chiamata nella callback
+ parse.forEach(function(name){
+//qui si richiama l'ultima funzione perche' la aggiungiamo al foreach in pratica un callback del callback
+   downloadImageByURL(name.avatar_url, name.login);
+ })
+ function downloadImageByURL(url, filePath) {
+   request.get(url)
+   .pipe(fs.createWriteStream(`./Avatar/${filePath}.jpg`));
+   // pipe fa scaricare i file e li canalizza dove vuoi...
+ }
 });
+console.log("Images dowloaded!");
