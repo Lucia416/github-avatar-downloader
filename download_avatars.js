@@ -16,12 +16,17 @@ function getRepoContributors(repoOwner, repoName, cb) {
 
 
 getRepoContributors(process.argv[2], process.argv[3], function(err, result, body) {
- var parse = JSON.parse(body);
- //il parse lo si fa qui perche' questa funzione e' quella che viene chiamata nella callback
- parse.forEach(function(name){
-//qui si richiama l'ultima funzione perche' la aggiungiamo al foreach in pratica un callback del callback
-   downloadImageByURL(name.avatar_url, name.login);
- })
+if(process.argv[2] !== null && process.argv[3] !== null ){
+     var parse = JSON.parse(body);
+     //il parse lo si fa qui perche' questa funzione e' quella che viene chiamata nella callback
+     parse.forEach(function(name){
+    //qui si richiama l'ultima funzione perche' la aggiungiamo al foreach in pratica un callback del callback
+       downloadImageByURL(name.avatar_url, name.login);
+     })
+ } else {
+   console.log("Error");
+ }
+
  function downloadImageByURL(url, filePath) {
    request.get(url)
    .pipe(fs.createWriteStream(`./Avatar/${filePath}.jpg`));
